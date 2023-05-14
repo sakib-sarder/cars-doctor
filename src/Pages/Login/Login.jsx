@@ -1,26 +1,32 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import img from "../../assets/images/login/login.svg";
 import { useContext } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
+import SocialLogin from "../Shared/SocialLogin";
 const Login = () => {
-
   const { signIn } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const from = location.state?.from?.pathname || "/";
 
   const handleLogin = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(email, password);
+    // console.log(email, password);
     signIn(email, password)
-      .then(result => {
+      .then((result) => {
         const user = result.user;
         console.log(user);
+        navigate(from, { replace: true });
       })
-      .catch(error => {
-      console.log(error);
-    })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
   return (
     <div className="hero  bg-base-200">
       <div className="hero-content flex-col lg:flex-row">
@@ -72,6 +78,7 @@ const Login = () => {
                 Sign Up
               </Link>
             </p>
+            <SocialLogin />
           </div>
         </div>
       </div>
